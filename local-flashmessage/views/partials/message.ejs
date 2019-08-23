@@ -1,0 +1,11 @@
+<% if (  error.message ) { %>
+    <% if (  error.message.length > 0 ) { %>
+        <p><strong>Error:</strong> <%= error.message %></p>
+    <% } %>
+ <% } %>
+
+ <% if (  success.message ) { %>
+    <% if (  success.message.length > 0 ) { %>
+        <p><strong>Sucess:</strong> <%= success.message %></p>
+    <% } %>
+ <% } %>

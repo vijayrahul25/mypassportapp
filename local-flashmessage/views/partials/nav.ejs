@@ -1,0 +1,14 @@
+<ul>
+        <% username %>
+    <% if (  !loggedin ) { %>
+        <li><a href='/login'>Login</a></li>
+        <li><a href='/signup'>Signup</a></li>    
+    <% } else{ %>  
+        <p>no photos uploaded</p>
+    <% } %>
+</ul>
+<% if (  loggedin ) { %>
+    <div>Hi, <%= username %> </div>
+<% } %>
+
+<% include ./message %>
