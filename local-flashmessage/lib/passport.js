@@ -1,4 +1,4 @@
-const UserDetails = require('./db');
+const user = require('./model/user');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 
@@ -9,7 +9,7 @@ module.exports = function(passport) {
     });
   
     passport.deserializeUser(function(id, cb) {        
-        UserDetails.findById(id, function(err, user) {
+        user.findById(id, function(err, user) {
         cb(err, user);
         });
     });
@@ -17,7 +17,7 @@ module.exports = function(passport) {
     passport.use('login-strategy', new LocalStrategy(
         {passReqToCallback : true},
         function(req, username, password, done) {           
-            UserDetails.findOne({
+            user.findOne({
             username: username,
             }, async function(err, user) {                  
                 if (err) {  
@@ -43,7 +43,7 @@ module.exports = function(passport) {
     passport.use('signup-strategy', new LocalStrategy(
         {passReqToCallback : true},
         function(req, username, password, done) {            
-            UserDetails.findOne({
+            user.findOne({
             username: username,
             }, function(err, user) {                   
                 if (err) {  
@@ -55,7 +55,7 @@ module.exports = function(passport) {
                     return done(null, false, req.flash('error_message', 'User already exist'));
                 }
         
-                var newUser = new UserDetails();
+                var newUser = new user();
                 newUser.username = username;
                 newUser.password = password;
        

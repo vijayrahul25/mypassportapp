@@ -1,16 +1,21 @@
-<ul>
-        <% username %>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+<ul class="navbar-nav">
     <% if (  !loggedin ) { %>
-        <li><a href='/login'>Login</a></li>
-        <li><a href='/signup'>Signup</a></li>    
+        <li class="nav-item"><a class="nav-link" href='/'>Home</a></li>
+        <li class="nav-item"><a class="nav-link" href='/login'>Login</a></li>
+        <li class="nav-item"><a class="nav-link" href='/signup'>Signup</a></li>    
     <% } else{ %>  
-        <li><a href='/logout'>Logout</a></li> 
-        <li><a href='/protected-1'>protected-1</a></li>    
-        <li><a href='/protected-2'>protected-2</a></li>           
+        <li class="nav-item"><a class="nav-link" href='/'>Home</a></li>        
+        <li class="nav-item"><a class="nav-link" href='/protected-1'>protected-1</a></li>    
+        <li class="nav-item"><a class="nav-link" href='/protected-2'>protected-2</a></li>           
+        <li class="nav-item"><a class="nav-link" href='/logout'>Logout</a></li> 
     <% } %>
 </ul>
+</nav>
+
 <% if (  loggedin ) { %>
     <div>Hi, <%= username %> </div>
 <% } %>
+
 
 <% include ./message %>

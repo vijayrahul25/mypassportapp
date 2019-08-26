@@ -11,7 +11,7 @@ module.exports = function(express, passport) {
    
    //console.log('flash', req.flash('info'));
    //var t = req.flash('info');
-   //console.log('res  ',  t );
+    res.locals.title = req.originalUrl.replace('/', '');
     res.locals.loggedin = false;
     res.locals.username = false;
     res.locals.error = {}
@@ -21,6 +21,7 @@ module.exports = function(express, passport) {
     
       if(req.user){
         res.locals.loggedin = true;
+        console.log(req.user.username);
         res.locals.username = req.user.username; 
         res.locals.userid = req.user._id;         
       };

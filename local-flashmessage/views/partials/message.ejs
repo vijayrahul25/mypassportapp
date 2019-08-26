@@ -1,11 +1,17 @@
+
+</br>     
 <% if (  error.message ) { %>
-    <% if (  error.message.length > 0 ) { %>
-        <p><strong>Error:</strong> <%= error.message %></p>
+    <% if (  error.message.length > 0 ) { %>        
+        <div class="alert alert-danger">
+                <strong>Error!</strong> <%= error.message %>
+        </div>
     <% } %>
  <% } %>
 
  <% if (  success.message ) { %>
     <% if (  success.message.length > 0 ) { %>
-        <p><strong>Sucess:</strong> <%= success.message %></p>
+        <div class="alert alert-success">
+                <strong>Success!</strong> <%= success.message %>
+         </div>        
     <% } %>
  <% } %>
