@@ -35,17 +35,23 @@ module.exports = function(express, passport) {
          if(req.user) {
           return res.redirect('/');   
          }                       
-         res.render('auth', { root : './'}); 
+         res.render('login', { root : './'}); 
     }); 
 
-    router.get('/signup', (req, res) => res.render('signup', { root : './'}));      
+    router.get('/signup', (req, res) => {
+        if(req.user) {
+          return res.redirect('/');   
+        }
+        res.render('signup', { root : './'})
+      }
+    );      
     router.get('/error', (req, res) => res.send("error logging in"));
 
-    router.get('/protected 1', function (req, res) {
+    router.get('/protected-1', checkLogedIn,  function (req, res) {
         res.render('protected', { root : './', pagename: 'page 1'}); 
     })
 
-    router.get('/protected 2', function (req, res) {
+    router.get('/protected-2', checkLogedIn, function (req, res) {
       res.render('protected', { root : './', pagename: 'page 2'}); 
     })
     
@@ -65,15 +71,22 @@ module.exports = function(express, passport) {
         })(req, res, next);
       });
 
-    router.post('/singup', function(req, res, next) {
-        passport.authenticate('signup-strategy', function(err, user, info) {            
+    router.post('/signup', function(req, res, next) {
+        passport.authenticate('signup-strategy', function(err, user, info) {   
+          console.log('signuproute: ', err);         
+          console.log('signupuser: ', user);  
           if (err) { return res.redirect('/signup'); }
 
           if (!user) { return res.redirect('/signup'); }
           
           return res.redirect('/');
         })(req, res, next);
-      });
+    });
+
+    router.get('/logout', function(req, res) {
+        req.logout();
+        res.redirect('/');
+    });
 
       router.use(function(req, res, next) {
         return res.status(404).send({ message: 'Route'+req.url+' Not found.' });
@@ -81,3 +94,10 @@ module.exports = function(express, passport) {
     
     return router; 
 };
+
+function checkLogedIn(req, res, next) {
+  if (req.isAuthenticated())
+      return next();
+
+  res.redirect('/login');
+}
