@@ -20,8 +20,7 @@ module.exports = function(express, passport) {
     res.locals.success.message = req.flash('success_message');
     
       if(req.user){
-        res.locals.loggedin = true;
-        console.log(req.user.username);
+        res.locals.loggedin = true;        
         res.locals.username = req.user.username; 
         res.locals.userid = req.user._id;         
       };
