@@ -8,7 +8,9 @@ module.exports = function(express, passport) {
         return res.status(200).send({ message: "welcome to my blog category!" });
     }); 
 
-    blogRouter.get('/post/all', authenticate, post_controler.getAllPost(req, res)); 
+    blogRouter.get('/post/all', authenticate, post_controler.getAllPost); 
+    blogRouter.get('/post/top', authenticate, post_controler.getTopPost); 
+    blogRouter.post('/post', authenticate, post_controler.newPost); 
 
     return blogRouter;    
 }
