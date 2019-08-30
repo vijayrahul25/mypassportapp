@@ -1,57 +1,52 @@
-module.exports = function(express, passport) { 
-    var router = express.Router();
+/* eslint-disable strict */
+const config = require('./../../conig/config');
 
-    const authenticate = require('./../authenticate')(passport);
+module.exports = function (express, passport) {
+	var router = express.Router();
+	const authController = require('./../authenticate')(passport);
+	const jwt = require('jsonwebtoken');
 
-    const jwt      = require('jsonwebtoken');
+	router.get('/', (req, res) => {
+		res.status(200).send({ message: 'welcome !' });
+	});
 
+	router.get('/protected-1', authController.validateJsonToken, function (req, res) {
+		res.status(200).send({ message: 'page 1 !' });
+	});
 
-    router.get('/', (req, res) => {
-        res.status(200).send({ message: "welcome !" });
-    });     
-    
-    router.get('/protected-1', authenticate,  function (req, res) {
-      res.status(200).send({ message: "page 1 !" });
-    })
+	router.get('/protected-2', authController.validateJsonToken, function (req, res) {
+		res.status(200).send({ message: 'page 2 !' });
+	});
 
-    router.get('/protected-2', authenticate, function (req, res) {
-      res.status(200).send({ message: "page 2 !" });
-    })
-    
-    router.post('/login', function(req, res, next) {  
-      
-        passport.authenticate('login-strategy', {session: false}, function(err, user) {              
-          if (err) { return res.status(200).send({ message: err }); }
-          
-          if (!user) { return res.status(200).send({ message: 'user not found' }); }
+	router.post('/login', function (req, res, next) {
+		passport.authenticate('login-strategy', { session: false }, function (err, user) {
+			if (err) { return res.status(200).send({ message: err }); }
 
-          req.login(user, {session: false}, (err) => {
-            if (err) { res.status(200).send({ message: err }); }
-            let { _id, username} = user;
-            
-            const token = jwt.sign({ _id, username }, 'myjwtsession');
-            respuser = {_id, username}
-            return res.status(200).send({respuser, token});
-        });
+			if (!user) { return res.status(200).send({ message: 'user not found' }); }
 
-          
-        })(req, res, next);
-      });
+			req.login(user, { session: false }, (err) => {
+				if (err) { res.status(200).send({ message: err }); }
+				const { _id, username } = user;
 
-    router.post('/signup', function(req, res, next) {      
-        passport.authenticate('signup-strategy', {session: false}, function(err, user) {                           
-         if (err) { return res.status(500).send( err ); }  
-         
-         if (!user) { return res.status(200).send({ 'message': 'user not registered' }); }
-         
-         return res.status(200).send({ message: "user registered !" });
+				const token = jwt.sign({ _id, username }, config.secret);
+				const respuser = { _id, username };
+				return res.status(200).send({ respuser, token });
+			});
+		})(req, res, next);
+	});
 
-        })(req, res, next);
-    });
+	router.post('/signup', function (req, res, next) {
+		passport.authenticate('signup-strategy', { session: false }, function (err, user) {
+			if (err) { return res.status(500).send(err); }
 
-    // router.get('/logout', function(req, res) {
-    //     req.logout();       
-    // });    
-    return router; 
+			if (!user) { return res.status(200).send({ message: 'user not registered' }); }
+
+			return res.status(200).send({ message: 'user registered !' });
+		})(req, res, next);
+	});
+
+	// router.get('/logout', function(req, res) {
+	//     req.logout();
+	// });
+	return router;
 };
-
